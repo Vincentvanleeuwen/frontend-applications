@@ -11,18 +11,15 @@
 
 <script>
 import { reactive, toRefs } from 'vue'
-
 import ToDo from "@/components/ToDo"
 const useToDoStates = () => {
   // Create states
   let state = reactive({
     toDoText: null
   })
-
   // make the states reactive
   return toRefs(state)
 }
-
 export default {
   name: "ToDoList",
   components: {
@@ -48,28 +45,27 @@ export default {
       return this.items.push({todo: toDoText})
     }
   }
-
 }
 </script>
 
 <style scoped>
-  ul {
-    width: 50%;
-    height: 100vh;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-  }
-  input {
-    border-radius: 1em;
-    padding: .5em 1em;
-    border: solid 1px grey;
-  }
-  input:focus {
-    outline: none;
-    border: solid 1px darkorange;
-    transition: 1s;
-  }
+ul {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+input {
+  border-radius: 1em;
+  padding: .5em 1em;
+  border: solid 1px grey;
+}
+input:focus {
+  outline: none;
+  border: solid 1px darkorange;
+  transition: 1s;
+}
 </style>

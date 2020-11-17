@@ -4,19 +4,11 @@
       <label for="num1">
         <input type="text" v-model="numberOne" id="num1" maxlength="2"/>
       </label>
-      <label for="operator">
-        <select name="operator" id="operator" v-model="operator">
-          <option value="+">+</option>
-          <option value="-">-</option>
-          <option value="/">/</option>
-          <option value="*">*</option>
-        </select>
-      </label>
       <label for="num2">
         <input type="text" v-model="numberTwo" id="num2" maxlength="2"/>
       </label>
 
-      <span> = {{ result }} </span>
+      <span> {{ result }} </span>
     </form>
   </div>
 
@@ -30,19 +22,7 @@
     let state = reactive({
       numberOne: 0,
       numberTwo: 0,
-      operator: '+',
-      result: computed(() => {
-        switch(state.operator) {
-          case '+':
-            return parseInt(state.numberOne) + parseInt(state.numberTwo)
-          case '-':
-            return parseInt(state.numberOne) - parseInt(state.numberTwo)
-          case '/':
-            return parseInt(state.numberOne) / parseInt(state.numberTwo)
-          case '*':
-            return parseInt(state.numberOne) * parseInt(state.numberTwo)
-        }
-      })
+      result: computed(() => parseInt(state.numberOne) + parseInt(state.numberTwo))
     })
 
     // make the states reactive
@@ -54,11 +34,10 @@
 
     // Import states into view
     setup() {
-      let { numberOne, numberTwo, operator, result } = useCalculator()
+      let { numberOne, numberTwo, result } = useCalculator()
       return {
         numberOne,
         numberTwo,
-        operator,
         result
       }
     }
@@ -81,13 +60,4 @@ li {
 a {
   color: #42b983;
 }
-input {
-  width: 2em;
-  height: 2em;
-  border: solid grey 1px;
-  margin: 1em;
-  text-align: center;
-}
-
-
 </style>
