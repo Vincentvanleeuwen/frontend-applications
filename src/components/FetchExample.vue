@@ -1,29 +1,48 @@
 <template>
   <div v-if="error"> {{ error }}</div>
-  <div v-for="city in cities.data" :key="city.id">
-    {{ city.location }} {{ city.capacity }}
+  <div v-for="city in combinedSet" :key="city">
+    {{ city }}
   </div>
 </template>
 
 <script>
 
 import { ref } from 'vue'
+import { fetchData } from "@/helpers/fetchData";
+import { convertToJSON } from "@/utils/convertToJSON";
+import { filterDataSets } from '@/helpers/filterData'
+import { mergeDataSets } from '@/helpers/mergeData'
+import { correctPlaceNames } from '@/helpers/correctPlaceNames'
+import { restructureDataSets } from '@/helpers/restructureData'
+
+
+const endPoints = [
+  'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=5000',
+  'https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=5000'
+]
+
 export default {
   name: "FetchExample",
 
   async setup() {
-    const cities = ref(null)
+
+    const combinedSet = ref(null)
     const error = ref(null)
 
     try {
-      const cityResponse = await fetch('')
-      cities.value = await cityResponse.json()
+
+      combinedSet.value = await fetchData(endPoints)
+                                  .then(convertToJSON)
+                                  .then(filterDataSets)
+                                  .then(mergeDataSets)
+                                  .then(correctPlaceNames)
+                                  .then(restructureDataSets)
+
     } catch (e) {
       error.value = e
     }
 
-
-    return { cities, error }
+    return { combinedSet, error }
   }
 }
 </script>

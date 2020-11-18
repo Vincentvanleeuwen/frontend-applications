@@ -9,21 +9,17 @@ export default {
   name: "ToDo",
   props: ['items'],
   methods: {
+    // Reversed so they pop in from the top instead of from the bottom.
     removeToDo(index) {
       let newItems = this.items
-      newItems.splice(index, 1)
+      newItems.reverse().splice(index, 1)
       return newItems
     },
     reverse(array) {
       console.log(array);
       return array.slice().reverse()
     }
-  },
-  // filters: {
-  //
-  // }
-  // Source
-  //https://stackoverflow.com/questions/41215867/why-is-vue-js-chrome-devtools-not-detecting-vue-js
+  }
 }
 </script>
 

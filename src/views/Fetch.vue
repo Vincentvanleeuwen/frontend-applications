@@ -1,6 +1,6 @@
 <template>
   <div class="fetch">
-    <h1>This is an about page</h1>
+    <h1>This is a page</h1>
   </div>
   <div v-if="error"> {{ error }}</div>
   <Suspense>
@@ -8,7 +8,7 @@
       <FetchExample/>
     </template>
     <template #fallback>
-      <div>Loading cities...</div>
+      <div>Loading Garages...</div>
     </template>
   </Suspense>
 
