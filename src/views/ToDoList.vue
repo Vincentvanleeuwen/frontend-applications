@@ -6,7 +6,7 @@
              placeholder="Add a todo!"
              v-model="toDoText">
     </label>
-    <input type="submit" value="Add ToDo">
+    <input type="submit" value="add">
   </form>
 
   <!--  Loop through todo's  -->
@@ -16,12 +16,13 @@
           v-bind:key="todo.id"
           v-bind:todo="todo"
           v-on:remove-todo="removeToDo"
-          v-on:complete-todo="completeToDo"/>
+          v-on:complete-todo="completeToDo"
+          v-on:edit-todo="editToDo"/>
   </section>
 </template>
 
 <script>
-// import Vue from 'vue'
+
 import { reactive, toRefs } from 'vue'
 import ToDo from '@/components/ToDo'
 const useToDoStates = () => {
@@ -40,9 +41,21 @@ export default {
   data: () => {
     return {
       items: [
-        { id: 1, todo: 'Eat', completed: true },
-        { id: 2, todo: 'Sleep', completed: false  },
-        { id: 3, todo: 'Drink', completed: false  }
+        {
+          id: 1,
+          todo: 'Eat',
+          completed: true
+        },
+        {
+          id: 2,
+          todo: 'Sleep',
+          completed: false
+        },
+        {
+          id: 3,
+          todo: 'Drink',
+          completed: false
+        }
       ]
     }
   },
@@ -76,12 +89,17 @@ export default {
       });
     },
     completeToDo(id) {
-      console.log(this.items)
       const selected = this.items.find(todo => todo.id === id)
-      console.log(selected);
       selected.completed = !selected.completed
-    }
+    },
+    editToDo(id, editValue) {
+      const selected = this.items.find(todo => todo.id === id)
 
+      if(selected.editMode) {
+        selected.todo = editValue
+      }
+
+    }
   }
 }
 </script>
@@ -105,5 +123,12 @@ input:focus {
   outline: none;
   border: solid 1px darkorange;
   transition: 1s;
+}
+input[type="submit"] {
+  margin-left: 1em;
+  background-color: #e7afa2;
+  color: white;
+  font-weight: bold;
+  border: none;
 }
 </style>
