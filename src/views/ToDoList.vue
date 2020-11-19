@@ -1,17 +1,29 @@
 <template>
-  <label for="new-todo">
-    <input id="new-todo" type="text" placeholder="Add a todo!" v-model="toDoText" @keyup.enter="addToDo(toDoText)">
-  </label>
+  <form @submit.prevent="addToDo">
+    <label for="new-todo">
+      <input id="new-todo"
+             type="text"
+             placeholder="Add a todo!"
+             v-model="toDoText">
+    </label>
+    <input type="submit" value="Add ToDo">
+  </form>
 
-  <ul id="todo-container">
+  <!--  Loop through todo's  -->
 
-    <ToDo :items="items"/>
-  </ul>
+  <section id="todo-container" >
+    <ToDo v-for="todo in reverse(items)"
+          v-bind:key="todo.id"
+          v-bind:todo="todo"
+          v-on:remove-todo="removeToDo"
+          v-on:complete-todo="completeToDo"/>
+  </section>
 </template>
 
 <script>
+// import Vue from 'vue'
 import { reactive, toRefs } from 'vue'
-import ToDo from "@/components/ToDo"
+import ToDo from '@/components/ToDo'
 const useToDoStates = () => {
   // Create states
   let state = reactive({
@@ -28,9 +40,9 @@ export default {
   data: () => {
     return {
       items: [
-        { todo: 'Eat' },
-        { todo: 'Sleep' },
-        { todo: 'Drink' }
+        { id: 1, todo: 'Eat', completed: true },
+        { id: 2, todo: 'Sleep', completed: false  },
+        { id: 3, todo: 'Drink', completed: false  }
       ]
     }
   },
@@ -41,9 +53,35 @@ export default {
     }
   },
   methods: {
-    addToDo(toDoText) {
-      return this.items.push({todo: toDoText})
+    addToDo() {
+      // Create new todo
+      console.log(this.toDoText)
+      const newToDo = {
+        id: this.items.length + 1,
+        todo: this.toDoText,
+        completed: false
+      }
+      // Empty input after creation
+      this.toDoText = ''
+
+      // Add new todo to array
+      this.items = [...this.items, newToDo]
+    },
+    reverse(array) {
+     return [...array].reverse()
+    },
+    removeToDo(id) {
+      this.items = this.items.filter((item)=> {
+        return item.id !== id
+      });
+    },
+    completeToDo(id) {
+      console.log(this.items)
+      const selected = this.items.find(todo => todo.id === id)
+      console.log(selected);
+      selected.completed = !selected.completed
     }
+
   }
 }
 </script>

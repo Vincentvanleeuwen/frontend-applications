@@ -30,14 +30,12 @@ export default {
     const error = ref(null)
 
     try {
-
       combinedSet.value = await fetchData(endPoints)
                                   .then(convertToJSON)
                                   .then(filterDataSets)
                                   .then(mergeDataSets)
                                   .then(correctPlaceNames)
                                   .then(restructureDataSets)
-
     } catch (e) {
       error.value = e
     }
