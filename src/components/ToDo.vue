@@ -1,27 +1,29 @@
 <template>
 
-  <div class="todo" v-bind:class="{'is-complete': todo.completed}">
+  <div class="todo" v-bind:class="{'is-complete': todo.completed, 'is-edit': todo.editMode}" >
 
-    <label for="complete-todo">
-      <input id="complete-todo"
-             type="checkbox"
+    <label class="complete-todo">
+      <input type="checkbox"
              v-on:change="$emit('complete-todo', todo.id)"
              v-bind:checked="todo.completed">
     </label>
+    <div v-if="todo.editMode === false">
+      {{ todo.todo }}
+    </div>
 
-    {{ todo.todo }}
-    <form v-on:submit.prevent="enableEditMode">
-      <label for="edit-todo">
+    <form v-on:submit.prevent="$emit('complete-edit', todo.id, toDoEdit)">
+      <label>
         <input class="edit-todo"
                type="text"
-               v-model="toDoEdit">
+               v-model="toDoEdit"
+               v-bind:class="{'is-editing': todo.editMode}">
       </label>
     </form>
 
     <section class="option-container">
       <font-awesome-icon :icon="editIcon"
                          :style="{ zIndex: 10 }"
-                         @click="showInput"/>
+                         @click="enableEditMode"/>
       <font-awesome-icon :icon="deleteIcon"
                          :style="{ zIndex: 10 }"
                          @click="$emit('remove-todo', todo.id)"/>
@@ -67,18 +69,13 @@ export default {
   methods: {
     enableEditMode() {
 
-      // $emit('edit-todo', todo.id, toDoEdit)
-      return [...this.todo, ].editMode = true
+      const selected = this.todo
+      selected.editMode = !selected.editMode
+      this.toDoEdit = this.todo.todo
 
     },
-    showInput() {
-
-      //#edit-todo
-      const editInputField = document.getElementById('edit-todo');
-      console.log(editInputField)
-      editInputField.display = 'block';
-      //display: none;
-      //
+    sendEdit() {
+      console.log('hello')
     }
   }
 }
@@ -90,7 +87,7 @@ export default {
   background: lightcoral;
   border: lightcoral solid 2px;
   border-radius: .5em;
-  height: auto;
+  height: 2em;
   width: 15em;
   line-height: 2em;
   margin: .5em 0;
@@ -115,7 +112,7 @@ export default {
 label input[type='checkbox'] {
   visibility: hidden;
 }
-label[for="complete-todo"]  {
+.complete-todo {
   cursor: pointer;
   position: absolute;
   width: 100%;
@@ -148,5 +145,15 @@ button {
   font-weight: bold;
   font-size:1em;
   background-color: inherit;
+}
+.edit-todo:focus {
+  outline: none;
+}
+.is-editing {
+  display: block;
+}
+.is-edit {
+  background-color: orange;
+  border: orange solid 2px;
 }
 </style>

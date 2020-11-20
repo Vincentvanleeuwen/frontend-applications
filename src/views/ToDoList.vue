@@ -17,7 +17,7 @@
           v-bind:todo="todo"
           v-on:remove-todo="removeToDo"
           v-on:complete-todo="completeToDo"
-          v-on:edit-todo="editToDo"/>
+          v-on:complete-edit="completeEdit"/>
   </section>
 </template>
 
@@ -25,6 +25,8 @@
 
 import { reactive, toRefs } from 'vue'
 import ToDo from '@/components/ToDo'
+import { selectToDo } from "@/utils/selectToDo";
+
 const useToDoStates = () => {
   // Create states
   let state = reactive({
@@ -44,17 +46,20 @@ export default {
         {
           id: 1,
           todo: 'Eat',
-          completed: true
+          completed: true,
+          editMode: false,
         },
         {
           id: 2,
           todo: 'Sleep',
-          completed: false
+          completed: false,
+          editMode: false,
         },
         {
           id: 3,
           todo: 'Drink',
-          completed: false
+          completed: false,
+          editMode: false
         }
       ]
     }
@@ -72,7 +77,8 @@ export default {
       const newToDo = {
         id: this.items.length + 1,
         todo: this.toDoText,
-        completed: false
+        completed: false,
+        editMode: false
       }
       // Empty input after creation
       this.toDoText = ''
@@ -89,16 +95,13 @@ export default {
       });
     },
     completeToDo(id) {
-      const selected = this.items.find(todo => todo.id === id)
+      const selected = selectToDo(id, this.items)
       selected.completed = !selected.completed
     },
-    editToDo(id, editValue) {
-      const selected = this.items.find(todo => todo.id === id)
-
-      if(selected.editMode) {
-        selected.todo = editValue
-      }
-
+    completeEdit(id, editVal) {
+      const selected = selectToDo(id, this.items)
+      selected.todo = editVal
+      selected.editMode = false
     }
   }
 }
