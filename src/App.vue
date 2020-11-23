@@ -1,9 +1,9 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Calculator</router-link> |
-    <router-link to="/fetch">Fetch & Error Handeling</router-link> |
-    <router-link to="/todolist">To Do List</router-link>
-  </div>
+<!--  <div id="nav">-->
+<!--    <router-link to="/">Calculator</router-link> |-->
+<!--    <router-link to="/fetch">Fetch & Error Handeling</router-link> |-->
+<!--    <router-link to="/todolist">To Do List</router-link>-->
+<!--  </div>-->
   <h1 v-if="error"> {{error}}</h1>
   <Suspense>
     <template #default>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+
   import { ref, onErrorCaptured } from 'vue'
   export default {
     name: 'App',
@@ -43,6 +44,9 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+body {
+  margin: 0;
 }
 #nav {
   padding: 30px;

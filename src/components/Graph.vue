@@ -1,30 +1,28 @@
 <template>
   <svg id="d3-chart"></svg>
+  <aside>
+    <form id="form">
+      Verander de X as
+      <fieldset>
+        <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
+        <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
+        <label for="parking"></label>
+        <label for="charging"></label>
+      </fieldset>
+      Verander de Y as
+      <fieldset>
+        <input id="cities" type="radio" name="type" value="Steden" checked>
+        <input id="towns" type="radio" name="type" value="Dorpen">
+        <label for="cities">
+          Steden
+        </label>
+        <label for="towns">
+          Dorpen
+        </label>
+      </fieldset>
+    </form>
+  </aside>
 
-  <form id="form">
-    Change X Axis
-    <fieldset>
-      <input id="parking" type="radio" name="column" value="Parking Spots" checked>
-      <input id="charging" type="radio" name="column" value="Charging Points">
-      <label for="parking">
-
-      </label>
-      <label for="charging">
-
-      </label>
-    </fieldset>
-    Change Y Axis
-    <fieldset>
-      <input id="cities" type="radio" name="type" value="Cities" checked>
-      <input id="towns" type="radio" name="type" value="Towns">
-      <label for="cities">
-        Cities
-      </label>
-      <label for="towns">
-        Towns
-      </label>
-    </fieldset>
-  </form>
 
 </template>
 
@@ -41,7 +39,7 @@ import {
 } from 'd3'
 
 // Default d3 values
-const margin = {top: 20, right: 20, bottom: 80, left: 120},
+const margin = {top: 30, right: 60, bottom: 80, left: 120},
       width = 460 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom
 
@@ -77,6 +75,7 @@ export default {
       currentType
     }
   },
+  // Run this code after the component updated. (After mount)
   updated() {
       // Create container
       select('#d3-chart').attr('width', width + margin.left + margin.right)
@@ -91,7 +90,7 @@ export default {
       // Eventlistener for column change
       select('body').selectAll((`input[name='column']`)).on('change', (e) => {
 
-        e.currentTarget.value === 'Charging Points' ?
+        e.currentTarget.value === 'Aantal oplaadpunten' ?
             this.currentColumn = 'chargingPointCapacity' :
             this.currentColumn = 'capacity'
 
@@ -100,13 +99,14 @@ export default {
 
       // Eventlistener for type change
       select('body').selectAll((`input[name='type']`)).on('change', (e) => {
-        e.currentTarget.value === 'Towns' ?
+        e.currentTarget.value === 'Dorpen' ?
                 this.currentType = 'town' :
                 this.currentType = 'city'
         this.updateData('y', this.currentType)
       });
   },
   methods: {
+    // Initiate first visualisation of the d3 graph
     initiateData() {
       this.xAxis(this.currentColumn)
       this.yAxis(this.currentType)
@@ -115,6 +115,7 @@ export default {
       this.addAxisToContainer()
       this.drawPops()
     },
+    // Once a button has been triggered update the d3 data
     updateData(axis, newSet) {
       this.xAxis(this.currentColumn)
       this.yAxis(this.currentType)
@@ -123,18 +124,21 @@ export default {
       this.updateAxisContainer(axis, newSet)
       this.drawPops()
     },
+    // Set X Axis data
     xAxis(column) {
       // Set max number for X Axis
       let xMax = max(this.cleanedData, ( d => d[column]))
-      // Create X Axis
+      // Add X Axis domain
       x.domain([0, xMax])
     },
+    // Set Y Axis data
     yAxis(type) {
-      // Set max number for Y Axis
+      // Set values for Y Axis
       let yMax = getPlaces(this.cleanedData, type).map(d => d.location).sort()
-      // Create Y Axis
+      // Add Y Axis domain
       y.domain(yMax)
     },
+    // Create both Axis'
     addAxisToContainer() {
       // Add X axis to the graph
       select('.graph-content')
@@ -156,21 +160,21 @@ export default {
       // source: https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
       select('.graph-content')
         .append('text')
-        .attr('transform', `translate(${width/2}, ${height + margin.top + 30})`)
+        .attr('transform', `translate(${width + (margin.left - 15)}, ${height + 20})`)
         .style('text-anchor', 'middle')
         .attr('class', 'label-text column')
-        .text('Amount of Parking spots');
+        .text('Aantal parkeerplaatsen');
 
       // Add Cities label
       select('.graph-content')
         .append('text')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - margin.left + 10)
-        .attr('x', 0 - (height / 2 - 20))
+        // .attr('transform', 'rotate(360)')
+        .attr('y', 0 - 30 )
+        .attr('x', 25)
         .attr('dy', '1em')
         .style("text-anchor", 'middle')
         .attr('class', 'label-text type')
-        .text('Cities');
+        .text('Steden');
 
       // Add tooltip to the body instead of the container
       select('#app')
@@ -178,6 +182,7 @@ export default {
         .attr('class', 'tooltip')
         .style('opacity', 0);
     },
+    // Update the axis values and labels
     updateAxisContainer(axis, newSet){
 
       const axisElement = select('.graph-content').select(`#${axis}-axis`);
@@ -189,23 +194,24 @@ export default {
       // Update Axis labels and lollipop colors
       switch (newSet) {
         case 'city':
-          select('.type').text("Cities");
+          select('.type').text("Steden");
           break;
         case 'town':
-          select('.type').text("Towns");
+          select('.type').text("Dorpen");
           break;
         case 'capacity':
-          select('.column').text("Amount of Parking spots");
+          select('.column').text("Aantal parkeerplaatsen");
           select('.graph-content').selectAll('.lollistick').attr('stroke', '#5a61ff');
           select('.graph-content').selectAll('.lollipop').attr('fill', '#5a61ff').attr('stroke', '#5a61ff').attr('opacity', 0.9);
           break;
         case 'chargingPointCapacity':
-          select('.column').text("Amount of Charging Points");
+          select('.column').text("Aantal oplaadpunten");
           select('.graph-content').selectAll('.lollistick').attr('stroke', '#ffca68');
           select('.graph-content').selectAll('.lollipop').attr('fill', '#ffca68').attr('stroke', '#ffca68').attr('opacity', 1);
           break;
       }
     },
+    // Draw the lollipops
     drawPops() {
 
       // Create the lollipops
@@ -219,7 +225,7 @@ export default {
                             .data(getPlaces(this.cleanedData, this.currentType))
                             .join('line');
 
-
+      // Add location of the stick
       lollisticks
         .attr('class', 'lollistick')
         .attr('y1', d => y(d.location) + y.bandwidth() / 2)
@@ -230,22 +236,27 @@ export default {
           .attr('stroke', '#5a61ff')
           .attr('opacity', 0.5);
 
-
+      // Add styling to the pop
       lollipops
         .attr('fill', '#5a61ff')
         .attr('stroke', '#5a61ff')
         .attr('opacity', 1)
         .attr('class', 'lollipop');
 
+      // Add location of the pop
       lollipops
         .attr('cy', d => y(d.location) + y.bandwidth() / 2)
         .transition().duration(500)
           .attr('cx', d => x(d[this.currentColumn]))
           .attr('r', 3);
 
-
+      // Add Event listener on the pop for tooltip
       lollipops.on("mouseover", (event, d) => {
-
+        console.log(this)
+        select(this).attr({
+          fill: 'orange',
+          stroke: 'orange'
+        });
         select('.tooltip').transition().duration(200).style('opacity', .9);
 
         select('.tooltip').html(`${
@@ -258,6 +269,7 @@ export default {
       })
       .on('mouseout', () => {
         select('.tooltip').transition().duration(500).style('opacity', 0);
+
       });
     }
 
@@ -286,9 +298,8 @@ export default {
     position: absolute;
     top: 0;
     left: 100px;
+    padding-top: 20px;
   }
-
-
 
   .btn {
     background-color: red;
@@ -304,7 +315,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    position: fixed;
+    /*position: fixed;*/
     right:0;
     top:0;
     bottom:0;
@@ -379,16 +390,16 @@ export default {
     opacity: .9;
     transition: .5s;
   }
-  input[value="Parking Spots"]:checked ~ label[for="parking"] {
+  input[value="Aantal parkeerplaatsen"]:checked ~ label[for="parking"] {
     border: 2px black solid;
   }
-  input[value="Charging Points"]:checked ~ label[for="charging"] {
+  input[value="Aantal oplaadpunten"]:checked ~ label[for="charging"] {
     border: 2px black solid;
   }
-  input[value="Cities"]:checked ~ label[for="cities"] {
+  input[value="Steden"]:checked ~ label[for="cities"] {
     border: 2px black solid;
   }
-  input[value="Towns"]:checked ~ label[for="towns"] {
+  input[value="Dorpen"]:checked ~ label[for="towns"] {
     border: 2px black solid;
   }
   .label-text {
