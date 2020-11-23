@@ -14,7 +14,6 @@ export const filterDataSets = (endPoints) => {
 
   // Loop through the available data sets
   return endPoints.map(endPoint => {
-    console.log(endPoint);
     // Loop through each entry of the data set
     return endPoint.map(entry => {
 

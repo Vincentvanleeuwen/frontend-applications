@@ -4,8 +4,34 @@
     <router-link to="/fetch">Fetch & Error Handeling</router-link> |
     <router-link to="/todolist">To Do List</router-link>
   </div>
-  <router-view/>
+  <h1 v-if="error"> {{error}}</h1>
+  <Suspense>
+    <template #default>
+      <router-view/>
+    </template>
+    <template #fallback>
+      <p> Loading...</p>
+    </template>
+  </Suspense>
 </template>
+
+<script>
+  import { ref, onErrorCaptured } from 'vue'
+  export default {
+    name: 'App',
+    setup() {
+      const error = ref(null);
+
+      onErrorCaptured((e) => {
+        error.value = e
+
+        return true;
+      });
+
+      return { error };
+    }
+  }
+</script>
 
 <style>
 #app {

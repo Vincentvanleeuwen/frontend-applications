@@ -68,15 +68,10 @@ export default {
   },
   methods: {
     enableEditMode() {
-
       const selected = this.todo
       selected.editMode = !selected.editMode
       this.toDoEdit = this.todo.todo
-
     },
-    sendEdit() {
-      console.log('hello')
-    }
   }
 }
 </script>

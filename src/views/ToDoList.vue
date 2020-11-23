@@ -1,4 +1,8 @@
 <template>
+  <span v-if="items.length !== 0"
+        class="counter">
+     [ {{completed}} / {{items.length}} ] -  Completed To Do's
+  </span>
   <form @submit.prevent="addToDo">
     <label for="new-todo">
       <input id="new-todo"
@@ -30,7 +34,8 @@ import { selectToDo } from "@/utils/selectToDo";
 const useToDoStates = () => {
   // Create states
   let state = reactive({
-    toDoText: null
+    toDoText: null,
+    completed: 0
   })
   // make the states reactive
   return toRefs(state)
@@ -42,38 +47,19 @@ export default {
   },
   data: () => {
     return {
-      items: [
-        {
-          id: 1,
-          todo: 'Eat',
-          completed: true,
-          editMode: false,
-        },
-        {
-          id: 2,
-          todo: 'Sleep',
-          completed: false,
-          editMode: false,
-        },
-        {
-          id: 3,
-          todo: 'Drink',
-          completed: false,
-          editMode: false
-        }
-      ]
+      items: []
     }
   },
   setup() {
-    let { toDoText } = useToDoStates()
+    let { toDoText, completed } = useToDoStates()
     return {
-      toDoText
+      toDoText,
+      completed
     }
   },
   methods: {
     addToDo() {
       // Create new todo
-      console.log(this.toDoText)
       const newToDo = {
         id: this.items.length + 1,
         todo: this.toDoText,
@@ -87,20 +73,33 @@ export default {
       this.items = [...this.items, newToDo]
     },
     reverse(array) {
-     return [...array].reverse()
+      // Reverse the array so items pop in from the top
+      return [...array].reverse()
     },
     removeToDo(id) {
+      // Filter the removed item out of the array
       this.items = this.items.filter((item)=> {
         return item.id !== id
       });
     },
     completeToDo(id) {
+      // Select the right todo
       const selected = selectToDo(id, this.items)
+
+      // Switch checkbox to on or off
       selected.completed = !selected.completed
+
+      // Count completed todo's
+      selected.completed ? this.completed++ : this.completed--
     },
     completeEdit(id, editVal) {
+      // Select the right todo
       const selected = selectToDo(id, this.items)
+
+      // Change todo value to edit value
       selected.todo = editVal
+
+      // Change editmode to false
       selected.editMode = false
     }
   }
@@ -133,5 +132,10 @@ input[type="submit"] {
   color: white;
   font-weight: bold;
   border: none;
+}
+.counter {
+  font-weight: bold;
+  margin-bottom: 1em;
+
 }
 </style>
