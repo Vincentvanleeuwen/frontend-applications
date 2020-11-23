@@ -54,4 +54,19 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 10em;
+  height: 1.5em;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0;
+  border-radius: 2px;
+  color:white;
+  font-weight: bold;
+  padding-top:.5em;
+  pointer-events: none;
+}
 </style>

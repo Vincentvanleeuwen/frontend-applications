@@ -6,10 +6,11 @@
     {{ error }}
     Cant fetch Data.
   </div>
-
-  <Graph :cleanedData="data"/>
-
+  <div id="lolly-container" v-else>
+    <Graph :cleanedData="dataState"/>
+  </div>
 </template>
+
 <script>
 // @ is an alias to /src
 import Graph from '@/components/Graph.vue'
@@ -20,6 +21,7 @@ import { filterDataSets } from '@/helpers/filterData'
 import { mergeDataSets } from '@/helpers/mergeData'
 import { correctPlaceNames } from '@/helpers/correctPlaceNames'
 import { restructureDataSets } from '@/helpers/restructureData'
+import {onMounted} from "@vue/runtime-core";
 
 const endPoints = [
   'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=5000',
@@ -37,35 +39,25 @@ export default {
   components: {
     Graph
   },
-  async data() {
-    return {
-      data: await fetchData(endPoints)
-                    .then(convertToJSON)
-                    .then(filterDataSets)
-                    .then(mergeDataSets)
-                    .then(correctPlaceNames)
-                    .then(restructureDataSets)
-    }
-  },
-  mounted() {
-    console.log('hi')
-  },
-  async setup() {
-    let dataState = ref(null)
+  setup() {
+    let dataState = ref([])
     let error = ref(null)
 
-    try {
-      dataState.value = await fetchData(endPoints)
-                          .then(convertToJSON)
-                          .then(filterDataSets)
-                          .then(mergeDataSets)
-                          .then(correctPlaceNames)
-                          .then(restructureDataSets)
-      console.log(dataState.value)
-    } catch(e) {
-      error.value = e
+    onMounted(() => {
+      fetchData(endPoints)
+        .then(convertToJSON)
+        .then(filterDataSets)
+        .then(mergeDataSets)
+        .then(correctPlaceNames)
+        .then(restructureDataSets)
+        .then(data => {
+          dataState.value = data
+        })
+       .catch(err => {
+          error.value = err
+        })
+    })
 
-    }
     return {
       dataState,
       error
@@ -75,3 +67,12 @@ export default {
 
 }
 </script>
+
+<style>
+#lolly-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
