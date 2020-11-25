@@ -4,19 +4,23 @@
     <form id="form">
       Verander de X as
       <fieldset>
-        <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
-        <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
-        <label for="parking"></label>
-        <label for="charging"></label>
+        <label for="parking">
+          <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
+        </label>
+        <label for="charging">
+          <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
+        </label>
       </fieldset>
       Verander de Y as
       <fieldset>
-        <input id="cities" type="radio" name="type" value="Steden" checked>
-        <input id="towns" type="radio" name="type" value="Dorpen">
+
+
         <label for="cities">
+          <input id="cities" type="radio" name="type" value="Steden" checked>
           Steden
         </label>
         <label for="towns">
+          <input id="towns" type="radio" name="type" value="Dorpen">
           Dorpen
         </label>
       </fieldset>
@@ -78,8 +82,8 @@ export default {
   // Run this code after the component updated. (After mount)
   updated() {
       // Create container
-      select('#d3-chart').attr('width', width + margin.left + margin.right)
-                         .attr('height', height + margin.top + margin.bottom)
+    select('#d3-chart').attr(`viewBox`, `0, 0, ${(width + margin.left + margin.right)}, ${(height + margin.top +
+        margin.bottom)}`)
                          .append('g')
                          .attr('transform', `translate( ${margin.left} , ${margin.top} )`)
                          .classed('graph-content', true)
@@ -89,7 +93,7 @@ export default {
 
       // Eventlistener for column change
       select('body').selectAll((`input[name='column']`)).on('change', (e) => {
-
+        e.preventDefault();
         e.currentTarget.value === 'Aantal oplaadpunten' ?
             this.currentColumn = 'chargingPointCapacity' :
             this.currentColumn = 'capacity'
@@ -99,6 +103,7 @@ export default {
 
       // Eventlistener for type change
       select('body').selectAll((`input[name='type']`)).on('change', (e) => {
+        e.preventDefault();
         e.currentTarget.value === 'Dorpen' ?
                 this.currentType = 'town' :
                 this.currentType = 'city'
@@ -189,7 +194,10 @@ export default {
       // Update Axis
       axis === 'y' ?
           axisElement.transition().duration(500).call(axisLeft(y)) :
-          axisElement.transition().duration(500).call(axisBottom(x));
+          axisElement.transition().duration(500).call(axisBottom(x))
+                                .selectAll('text')
+                                .attr('transform', 'translate(-10,0)rotate(-35)')
+                                .style('text-anchor', 'end')
 
       // Update Axis labels and lollipop colors
       switch (newSet) {
@@ -253,10 +261,10 @@ export default {
       // Add Event listener on the pop for tooltip
       lollipops.on("mouseover", (event, d) => {
         console.log(this)
-        select(this).attr({
-          fill: 'orange',
-          stroke: 'orange'
-        });
+        // select(this).attr({
+        //   fill: 'orange',
+        //   stroke: 'orange'
+        // });
         select('.tooltip').transition().duration(200).style('opacity', .9);
 
         select('.tooltip').html(`${
@@ -291,7 +299,7 @@ export default {
     vertical-align: top;
     overflow: hidden;
 
-    margin: 30px 30px 70px 60px
+    margin: 0 20px 0 0;
   }
   .graph-content {
     display: inline-block;
@@ -316,10 +324,10 @@ export default {
     justify-content: center;
     align-items: flex-start;
     /*position: fixed;*/
-    right:0;
-    top:0;
-    bottom:0;
-    z-index: 999;
+    /*right:0;*/
+    /*top:0;*/
+    /*bottom:0;*/
+    /*z-index: 999;*/
     padding: 2em;
   }
   fieldset {

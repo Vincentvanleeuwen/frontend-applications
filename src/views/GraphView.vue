@@ -1,7 +1,18 @@
 <template>
-  <div class="title">
-    <h1>Hoe krap is het per stad in parkeergarages qua oplaadpunten voor elektrische auto's?</h1>
-  </div>
+  <transition name="slide-in">
+    <div class="title">
+      <h1>Hoe krap is het per stad in parkeergarages qua oplaadpunten voor elektrische auto's?</h1>
+    </div>
+  </transition>
+  <p>
+    Amsterdam heeft als doel om in 2030 een elektrische stad te zijn. Dit houdt in dat er dus ook geen benzine
+    voertuigen mogen rijden. Wat ik mij afvraag, kunnen de parkeergarages genoeg oplaadpunten aanbieden als er alleen
+    maar elektrische voertuigen mogen rijden in de stad?
+
+    Hoe zouden Amsterdam en andere steden/dorpen presteren als het gaat om oplaadpunten in parkeergarages? In de
+    onderstaande grafiek heb ik a.d.h.v. RDW data onderzocht hoeveel laadpunten er zijn per stad of dorp in
+    parkeergarages.
+  </p>
   <div id="animation"></div>
   <div v-if="error">
     {{ error }}
@@ -109,5 +120,14 @@ p {
   width: 30em;
   padding-bottom: 5em;
   margin:-40vh 0 0 0;
+}
+
+.slide-in-enter-from {
+  margin: -500px;
+  transition: all .5s ease;
+}
+.slide-in-enter-to {
+  margin: 0;
+  transition: all .5s ease;
 }
 </style>

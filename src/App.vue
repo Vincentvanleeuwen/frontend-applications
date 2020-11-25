@@ -5,7 +5,7 @@
 <!--    <router-link to="/todolist">To Do List</router-link>-->
 <!--  </div>-->
   <h1 v-if="error"> {{error}}</h1>
-  <Suspense>
+  <Suspense v-else>
     <template #default>
       <router-view/>
     </template>
