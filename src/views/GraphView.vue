@@ -1,25 +1,31 @@
 <template>
-  <transition name="slide-in">
-    <div class="title">
+
+    <div class="title" data-aos="zoom-out-down">
       <h1>Hoe krap is het per stad in parkeergarages qua oplaadpunten voor elektrische auto's?</h1>
     </div>
-  </transition>
-  <p>
-    Amsterdam heeft als doel om in 2030 een elektrische stad te zijn. Dit houdt in dat er dus ook geen benzine
-    voertuigen mogen rijden. Wat ik mij afvraag, kunnen de parkeergarages genoeg oplaadpunten aanbieden als er alleen
-    maar elektrische voertuigen mogen rijden in de stad?
 
-    Hoe zouden Amsterdam en andere steden/dorpen presteren als het gaat om oplaadpunten in parkeergarages? In de
-    onderstaande grafiek heb ik a.d.h.v. RDW data onderzocht hoeveel laadpunten er zijn per stad of dorp in
-    parkeergarages.
-  </p>
+  <section class="story-container">
+    <p data-aos="fade-right" data-aos-delay="500">
+      Amsterdam heeft als doel om in 2030 een elektrische stad te zijn. Dit houdt in dat er dus ook geen benzine
+      voertuigen mogen rijden. Wat ik mij afvraag, kunnen de parkeergarages genoeg oplaadpunten aanbieden als er alleen
+      maar elektrische voertuigen mogen rijden in de stad?
+    </p>
+  </section>
+  <section class="story-container">
+    <p data-aos="fade-left" data-aos-offset="200">
+      Hoe zouden Amsterdam en andere steden/dorpen presteren als het gaat om oplaadpunten in parkeergarages? In de
+      onderstaande grafiek heb ik aan de hand van RDW data onderzocht hoeveel laadpunten er zijn per stad of dorp in
+      parkeergarages.
+    </p>
+  </section>
+
   <div id="animation"></div>
   <div v-if="error">
     {{ error }}
     Cant fetch Data.
   </div>
-  <div id="lolly-container" v-else>
-    <Graph :cleanedData="dataState"/>
+  <div id="lolly-container" v-else-if="dataState.length" >
+    <Graph :cleanedData="dataState" />
   </div>
 
   <p>
@@ -40,35 +46,24 @@ import { mergeDataSets } from '@/helpers/mergeData'
 import { correctPlaceNames } from '@/helpers/correctPlaceNames'
 import { restructureDataSets } from '@/helpers/restructureData'
 import { onMounted } from "@vue/runtime-core";
-// import { lottie } from 'lottie-web'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const endPoints = [
   'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=5000',
   'https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=5000'
 ]
 
-// const useDataStates = () => {
-//   // Create states
-//
-//   // make the states reactive
-//   return toRefs(state)
-// }
 export default {
   name: 'GraphView',
   components: {
     Graph
   },
   setup() {
+    AOS.init()
     let dataState = ref([])
     let error = ref(null)
 
-    // lottie.loadAnimation({
-    //   container: document.getElementById('animation'),
-    //   renderer: 'svg',
-    //   loop: true,
-    //   autoplay: true,
-    //   path: '../../public/media/data.json'
-    // })
     onMounted(() => {
       fetchData(endPoints)
         .then(convertToJSON)
@@ -102,24 +97,42 @@ export default {
   align-items: center;
 }
 h1 {
-  font-size: 1em;
+  font-size: 1.5em;
+  line-height: 2em;
   width: 22em;
   color:white;
   font-weight: bold;
 }
+.story-container {
+  width: 100%;
+  height: 40vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.story-container:first-of-type p {
+  font-weight: 700;
+}
+.story-container:last-of-type {
+  justify-content: flex-end;
+  align-items: center;
+}
 p {
-  max-width: 50%;
+  max-width: 40%;
+  margin: 2em 4em;
 }
 .title {
-  height: 50vh;
+  height: 60vh;
+  text-align: center;
   border-radius: 0 0 50% 50%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   background-color: #090606;
-  width: 30em;
-  padding-bottom: 5em;
-  margin:-40vh 0 0 0;
+  width: 40em;
+  padding-bottom: 4em;
+  margin: -40vh 0 0 0;
 }
 
 .slide-in-enter-from {

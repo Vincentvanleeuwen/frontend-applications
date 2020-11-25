@@ -1,9 +1,15 @@
 <template>
   <svg id="d3-chart"></svg>
+<!--  DOM needs to see an update in order for the graph to update-->
+  <div style="display:none;">
+    {{ currentColumn }}
+    {{ currentType }}
+  </div>
   <aside>
     <form id="form">
-      Verander de X as
+
       <fieldset>
+        <legend>Verander de X as</legend>
         <label for="parking">
           <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
         </label>
@@ -11,9 +17,9 @@
           <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
         </label>
       </fieldset>
-      Verander de Y as
-      <fieldset>
 
+      <fieldset>
+        <legend>Verander de Y as</legend>
 
         <label for="cities">
           <input id="cities" type="radio" name="type" value="Steden" checked>
@@ -31,7 +37,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+// import { ref, watch } from 'vue'
 import { getPlaces } from '@/helpers/getPlaces'
 import {
   select,
@@ -50,16 +56,6 @@ const margin = {top: 30, right: 60, bottom: 80, left: 120},
 const x = scaleLinear().rangeRound([0, width]).nice()
 const y =  scaleBand().rangeRound([ 0, height])
 
-const useD3States = () => {
-  // Create states
-  let state = reactive({
-    currentColumn: 'capacity',
-    currentType: 'city',
-
-  })
-  // make the states reactive
-  return toRefs(state)
-}
 
 export default {
   name: 'Graph',
@@ -68,78 +64,116 @@ export default {
       type: Array
     }
   },
-  setup() {
-    let {
-      currentColumn,
-      currentType
-    } = useD3States()
-
+  data() {
     return {
-      currentColumn,
-      currentType
+      currentColumn: 'capacity',
+      currentType: 'city'
     }
   },
-  // Run this code after the component updated. (After mount)
-  updated() {
-      // Create container
+  // setup() {
+  //   // return reactive({
+  //   //   currentColumn: 'capacity',
+  //   //   currentType: 'city',
+  //   // })
+  //
+  //   const currentColumn = ref('capacity')
+  //   const currentType = ref('city')
+  //
+  //   return { currentColumn, currentType }
+  // },
+  mounted() {
+    // Create the graph container
     select('#d3-chart').attr(`viewBox`, `0, 0, ${(width + margin.left + margin.right)}, ${(height + margin.top +
         margin.bottom)}`)
-                         .append('g')
-                         .attr('transform', `translate( ${margin.left} , ${margin.top} )`)
-                         .classed('graph-content', true)
+        .append('g')
+        .attr('transform', `translate( ${margin.left} , ${margin.top} )`)
+        .classed('graph-content', true)
 
-      // First init of graph
-      this.initiateData()
+    // First init of graph
+    this.initiateData()
 
-      // Eventlistener for column change
-      select('body').selectAll((`input[name='column']`)).on('change', (e) => {
-        e.preventDefault();
-        e.currentTarget.value === 'Aantal oplaadpunten' ?
-            this.currentColumn = 'chargingPointCapacity' :
-            this.currentColumn = 'capacity'
+    // Eventlistener for column change
+    select('body').selectAll((`input[name='column']`)).on('change', (e) => {
+      e.preventDefault();
+      e.currentTarget.value === 'Aantal oplaadpunten' ?
+          this.currentColumn = 'chargingPointCapacity' :
+          this.currentColumn = 'capacity'
+    });
 
-        this.updateData('x', this.currentColumn)
-      });
+    // Eventlistener for type change
+    select('body').selectAll((`input[name='type']`)).on('change', (e) => {
+      e.preventDefault();
+      e.currentTarget.value === 'Dorpen' ?
+          this.currentType = 'town' :
+          this.currentType = 'city'
 
-      // Eventlistener for type change
-      select('body').selectAll((`input[name='type']`)).on('change', (e) => {
-        e.preventDefault();
-        e.currentTarget.value === 'Dorpen' ?
-                this.currentType = 'town' :
-                this.currentType = 'city'
-        this.updateData('y', this.currentType)
-      });
+    });
+
+
+
+
+  },
+  // Run this code after the component has updated.
+  updated() {
+    console.log('hello')
+    // Update axis data & lollipop data
+    this.xAxis()
+    this.yAxis()
+
+    this.updatePops()
+
+    // Select axis elements
+    const yAxisElement = select('.graph-content').select('#y-axis');
+    const xAxisElement = select('.graph-content').select('#x-axis');
+
+    // Update Axis
+    yAxisElement
+      .transition()
+      .duration(500)
+      .call(axisLeft(y))
+
+    xAxisElement
+      .transition()
+      .duration(500)
+      .call(axisBottom(x))
+      .selectAll('text')
+        .attr('transform', 'translate(-10,0)rotate(-35)')
+        .style('text-anchor', 'end')
+
+    select('.type').text(this.currentType === 'city' ? 'Steden' : "Dorpen");
+    select('.column').text(`Aantal ${this.currentColumn === 'capacity' ? 'parkeerplaatsen' : 'oplaadpunten'}`);
+
+    select('.graph-content')
+      .selectAll('.lollistick')
+      .attr('stroke', this.newColor());
+
+    select('.graph-content')
+      .selectAll('.lollipop')
+        .attr('fill', this.newColor())
+        .attr('stroke', this.newColor())
+        .attr('opacity', 0.9);
+
   },
   methods: {
     // Initiate first visualisation of the d3 graph
     initiateData() {
-      this.xAxis(this.currentColumn)
-      this.yAxis(this.currentType)
-
+      this.xAxis()
+      this.yAxis()
       // Add Values to Axis
       this.addAxisToContainer()
       this.drawPops()
     },
-    // Once a button has been triggered update the d3 data
-    updateData(axis, newSet) {
-      this.xAxis(this.currentColumn)
-      this.yAxis(this.currentType)
-
-      // Add Values to Axis
-      this.updateAxisContainer(axis, newSet)
-      this.drawPops()
-    },
     // Set X Axis data
-    xAxis(column) {
+    xAxis() {
       // Set max number for X Axis
-      let xMax = max(this.cleanedData, ( d => d[column]))
+      let xMax = max(this.cleanedData, ( d => d[this.currentColumn]))
       // Add X Axis domain
       x.domain([0, xMax])
     },
     // Set Y Axis data
-    yAxis(type) {
+    yAxis() {
       // Set values for Y Axis
-      let yMax = getPlaces(this.cleanedData, type).map(d => d.location).sort()
+      let yMax = getPlaces(this.cleanedData, this.currentType).map(d => d.location).sort()
       // Add Y Axis domain
       y.domain(yMax)
     },
@@ -165,7 +199,7 @@ export default {
       // source: https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
       select('.graph-content')
         .append('text')
-        .attr('transform', `translate(${width + (margin.left - 15)}, ${height + 20})`)
+        .attr('transform', `translate(${width / 2}, ${height + 60})`)
         .style('text-anchor', 'middle')
         .attr('class', 'label-text column')
         .text('Aantal parkeerplaatsen');
@@ -187,101 +221,115 @@ export default {
         .attr('class', 'tooltip')
         .style('opacity', 0);
     },
-    // Update the axis values and labels
-    updateAxisContainer(axis, newSet){
-
-      const axisElement = select('.graph-content').select(`#${axis}-axis`);
-      // Update Axis
-      axis === 'y' ?
-          axisElement.transition().duration(500).call(axisLeft(y)) :
-          axisElement.transition().duration(500).call(axisBottom(x))
-                                .selectAll('text')
-                                .attr('transform', 'translate(-10,0)rotate(-35)')
-                                .style('text-anchor', 'end')
-
-      // Update Axis labels and lollipop colors
-      switch (newSet) {
-        case 'city':
-          select('.type').text("Steden");
-          break;
-        case 'town':
-          select('.type').text("Dorpen");
-          break;
-        case 'capacity':
-          select('.column').text("Aantal parkeerplaatsen");
-          select('.graph-content').selectAll('.lollistick').attr('stroke', '#5a61ff');
-          select('.graph-content').selectAll('.lollipop').attr('fill', '#5a61ff').attr('stroke', '#5a61ff').attr('opacity', 0.9);
-          break;
-        case 'chargingPointCapacity':
-          select('.column').text("Aantal oplaadpunten");
-          select('.graph-content').selectAll('.lollistick').attr('stroke', '#ffca68');
-          select('.graph-content').selectAll('.lollipop').attr('fill', '#ffca68').attr('stroke', '#ffca68').attr('opacity', 1);
-          break;
-      }
-    },
     // Draw the lollipops
     drawPops() {
-
-      // Create the lollipops
-      const lollipops = select('.graph-content')
-                          .selectAll('.lollipop')
+      // Select lolly group element
+      const lollipopGroup = select('.graph-content')
+                          .selectAll('.lolly')
                           .data(getPlaces(this.cleanedData, this.currentType))
-                          .join('circle');
+                            .enter().append('g')
+                              .attr('class', 'lolly')
 
-      const lollisticks = select('.graph-content')
-                            .selectAll('.lollistick')
+      // Update Stick
+      lollipopGroup
+        .selectAll('.lollistick')
+        .data(d => [d])
+        .enter()
+          .append('line')
+            .attr('class', 'lollistick')
+            .attr('y1', d => y(d.location) + y.bandwidth() / 2)
+            .attr('y2', d => y(d.location) + y.bandwidth() / 2)
+            .transition().duration(500)
+              .attr('x1', d => x(d[this.currentColumn]))
+              .attr('x2', x(0))
+              .attr('stroke', this.newColor())
+              .attr('opacity', 0.5);
+
+      // Update Pop
+      lollipopGroup
+        .selectAll('.lollipop')
+        .data(d => [d])
+        .enter()
+          .append('circle')
+            .attr('class', 'lollipop')
+            .attr('fill', this.newColor())
+            .attr('stroke', this.newColor())
+            .attr('opacity', 1)
+            .attr('cy', d => y(d.location) + y.bandwidth() / 2)
+            // Add Event listener on the pop for tooltip
+            .on("mouseover", (event, d) => {
+              select('.tooltip').transition().duration(200).style('opacity', .9);
+              select('.tooltip').html(`${
+                  d[this.currentColumn]} ${this.currentColumn === 'capacity' ?
+                  'Parkeerplaatsen' :
+                  'Oplaadpunten'
+              } `)
+              .style('left', `${event.pageX}px`)
+              .style('top', `${event.pageY - 28}px`);
+            })
+            .on('mouseout', () => {
+              select('.tooltip').transition().duration(500).style('opacity', 0);
+            })
+            .transition().duration(500)
+              .attr('cx', d => x(d[this.currentColumn]))
+              .attr('r', 3);
+    },
+    updatePops() {
+      console.log('hello')
+      // Update the lollipops
+      const lollipopGroup = select('.graph-content')
+                          .selectAll('.lolly')
                             .data(getPlaces(this.cleanedData, this.currentType))
-                            .join('line');
+                            .join('g')
+                              .attr('class','lolly')
 
-      // Add location of the stick
-      lollisticks
-        .attr('class', 'lollistick')
-        .attr('y1', d => y(d.location) + y.bandwidth() / 2)
-        .attr('y2', d => y(d.location) + y.bandwidth() / 2)
-        .transition().duration(500)
-          .attr('x1', d => x(d[this.currentColumn]))
-          .attr('x2', x(0))
-          .attr('stroke', '#5a61ff')
-          .attr('opacity', 0.5);
+      // Update the pop
+      lollipopGroup
+        .selectAll('.lollipop')
+          .data(d => [d]).join('circle')
+          .attr('class', 'lollipop')
+            .attr('cy', d => y(d.location) + y.bandwidth() / 2)
 
-      // Add styling to the pop
-      lollipops
-        .attr('fill', '#5a61ff')
-        .attr('stroke', '#5a61ff')
-        .attr('opacity', 1)
-        .attr('class', 'lollipop');
+          // Add tooltip
+          .on("mouseover", (event, d) => {
 
-      // Add location of the pop
-      lollipops
-        .attr('cy', d => y(d.location) + y.bandwidth() / 2)
-        .transition().duration(500)
-          .attr('cx', d => x(d[this.currentColumn]))
-          .attr('r', 3);
+            select('.tooltip').transition().duration(200).style('opacity', .9);
 
-      // Add Event listener on the pop for tooltip
-      lollipops.on("mouseover", (event, d) => {
-        console.log(this)
-        // select(this).attr({
-        //   fill: 'orange',
-        //   stroke: 'orange'
-        // });
-        select('.tooltip').transition().duration(200).style('opacity', .9);
+            select('.tooltip').html(`${
+                d[this.currentColumn]} ${this.currentColumn === 'capacity' ?
+                'Parkeerplaatsen' :
+                'Oplaadpunten'
+            } `)
+            .style('left', `${event.pageX}px`)
+            .style('top', `${event.pageY - 28}px`);
+          })
+          .on('mouseout', () => {
+            select('.tooltip').transition().duration(500).style('opacity', 0);
 
-        select('.tooltip').html(`${
-          d[this.currentColumn]} ${this.currentColumn === 'capacity' ?
-                                                     'parking spots' :
-                                                     'charging points'
-        } `)
-        .style('left', `${event.pageX}px`)
-        .style('top', `${event.pageY - 28}px`);
-      })
-      .on('mouseout', () => {
-        select('.tooltip').transition().duration(500).style('opacity', 0);
+          })
+          .transition().duration(500)
+            .attr('cx', d => x(d[this.currentColumn]))
+            .attr('r', 3);
 
-      });
-    }
+      //  Update the stick
+      lollipopGroup
+        .selectAll('.lollistick')
+          .data(d => [d])
+          .join('line')
+            .attr('class', 'lollistick')
+            .attr('y1', d => y(d.location) + y.bandwidth() / 2)
+            .attr('y2', d => y(d.location) + y.bandwidth() / 2)
+            .transition().duration(500)
+              .attr('x1', d => x(d[this.currentColumn]))
+              .attr('x2', x(0))
 
-  }
+    },
+
+    newColor() {
+      return this.currentColumn === 'capacity' ? '#5a61ff' : '#ffca68'
+    },
+  },
+
 }
 </script>
 
@@ -410,15 +458,6 @@ export default {
   input[value="Dorpen"]:checked ~ label[for="towns"] {
     border: 2px black solid;
   }
-  .label-text {
-    font-style: italic;
-    font-weight: bold;
-    font-size: .8em;
-    fill: rgba(0, 0, 0, 0.3);
-  }
-  .title-text {
-    font-weight: bold;
-    font-size: .5em;
-    fill: rgba(0, 0, 0, 1);
-  }
+
+
 </style>
