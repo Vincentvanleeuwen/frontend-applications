@@ -54,8 +54,12 @@ Navigate to the desired directory in your terminal. Once you've reached the dire
   
   // Watch for changes
   > npm run serve
+  
+  OR 
   // Build the app and minify project for production
   > npm run build
+  
+  OR
   // Run the linter
   > npm run lint
   
