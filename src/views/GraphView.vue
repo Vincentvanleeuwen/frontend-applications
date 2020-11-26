@@ -116,7 +116,7 @@ h1 {
   height: 40vh;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .story-container:first-of-type p:first-of-type:not(.disclaimer)  {
@@ -127,7 +127,7 @@ h1 {
   align-items: center;
 }
 p {
-  max-width: 40%;
+  max-width: 30%;
   margin: 2em 4em;
 }
 .title {

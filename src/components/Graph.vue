@@ -327,19 +327,10 @@ export default {
     display: inline-block;
     position: relative;
     width: 600px;
-
     vertical-align: top;
     overflow: hidden;
-
     margin: 0 20px 0 0;
   }
-  /*.graph-content {*/
-  /*  display: inline-block;*/
-  /*  position: absolute;*/
-  /*  top: 0;*/
-  /*  left: 50px;*/
-  /*  padding-top: 20px;*/
-  /*}*/
 
   .btn {
     background-color: red;
