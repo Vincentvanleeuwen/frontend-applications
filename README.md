@@ -34,6 +34,8 @@ Needed columns:
 In these two data sets I can compare the AreaID row, so I can find out where each charging point is located.
 The AreaDesc shows the name of the parking area and the city.
 
+There have been two invalid data pieces. There was no location bound to the object so I had to leave these two out of the results.
+The reason not every city and town are included in the graph is that there simply wasn't any data of those towns and cities.
 ## Main Packages used
 - [D3@6.2.0](https://www.npmjs.com/package/d3)
 - [Vue.js@3.0.0](https://www.npmjs.com/package/vue)
@@ -63,12 +65,12 @@ You can now preview the datastory at localhost:8080/
 ## Live Preview
 
 https://naughty-dubinsky-ad1b58.netlify.app/
-![Vue D3 Graph](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![Vue D3 Graph](https://github.com/Vincentvanleeuwen/frontend-applications/blob/main/public/media/preview.png)
 
 ## Sources
 
 People that helped: 
-- Jonah Meijers (Reduce, Tuples, find)
+- Jonah Meijers (Reduce, Tuples, lifecycle hooks,  )
 - Robert Spier (Windows/Git problems & Map)
 
 https://www.d3-graph-gallery.com/graph/lollipop_horizontal.html
