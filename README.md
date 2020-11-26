@@ -65,7 +65,7 @@ You can now preview the datastory at localhost:8080/
 
 ## Live Preview
 
-https://naughty-dubinsky-ad1b58.netlify.app/
+https://frontendapp-vincent.netlify.app/
 ![Vue D3 Graph](https://github.com/Vincentvanleeuwen/frontend-applications/blob/main/public/media/preview.png)
 
 ## Sources
