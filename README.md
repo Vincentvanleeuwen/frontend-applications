@@ -71,7 +71,7 @@ https://frontendapp-vincent.netlify.app/
 
 ## Sources
 
-People that helped out with weird little bugs: 
+People that helped out with weird bugs: 
 - **Jonah Meijers**
 - Roeland van Stee
 - Robert Spier 
