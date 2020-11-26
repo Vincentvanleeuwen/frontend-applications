@@ -29,8 +29,6 @@
     {{ currentType }}
   </div>
 
-
-
 </template>
 
 <script>
@@ -52,7 +50,6 @@ const margin = {top: 30, right: 60, bottom: 80, left: 120},
 
 const x = scaleLinear().rangeRound([0, width]).nice()
 const y =  scaleBand().rangeRound([ 0, height])
-
 
 export default {
   name: 'Graph',

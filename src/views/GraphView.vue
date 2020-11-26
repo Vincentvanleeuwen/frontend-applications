@@ -1,7 +1,11 @@
 <template>
     <div class="title"
-         data-aos="zoom-out-down">
+         data-aos="fade-down-right"
+         data-aos-duration="1000"
+         data-aos-easing="ease-in-out">
       <h1>Kun je je elektrische auto gemakkelijk opladen in parkeergarages in Nederland?</h1>
+      <font-awesome-icon :icon="scrollIcon"
+                         class="scroll-icon"/>
     </div>
 
   <section class="story-container">
@@ -17,7 +21,6 @@
       stad of dorp in parkeergarages.
     </p>
   </section>
-
 
   <div id="animation"></div>
   <div v-if="error">
@@ -57,6 +60,9 @@ import { onMounted } from "@vue/runtime-core";
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons'
+
 
 const endPoints = [
   'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=5000',
@@ -66,10 +72,18 @@ const endPoints = [
 export default {
   name: 'GraphView',
   components: {
-    Graph
+    Graph,
+    FontAwesomeIcon
+  },
+  data() {
+    return {
+      scrollIcon: faAngleDoubleDown
+    }
   },
   setup() {
+    // Initialize Animate On Scroll
     AOS.init()
+    // Create a data reference
     let dataState = ref([])
     let error = ref(null)
 
@@ -81,6 +95,7 @@ export default {
         .then(correctPlaceNames)
         .then(restructureDataSets)
         .then(data => {
+          // Set the data to the ref
           dataState.value = data
         })
        .catch(err => {
@@ -107,17 +122,18 @@ export default {
   flex-direction: column;
 }
 h1 {
-  font-size: 1.5em;
+  font-size: 3em;
   line-height: 2em;
-  width: 22em;
-  color:white;
+  width: 50rem;
+  color: #222020;
+  font-family: Raleway, sans-serif;
   font-weight: bold;
 }
 .story-container {
   width: 100%;
   height: 40vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -133,16 +149,18 @@ p {
   margin: 2em 4em;
 }
 .title {
-  height: 60vh;
-  text-align: center;
-  border-radius: 0 0 50% 50%;
+  height: 100vh;
+  /*text-align: center;*/
+  /*border-radius: 0 0 50% 50%;*/
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  background-color: #222020;
-  width: 40em;
-  padding-bottom: 4em;
-  margin: -40vh 0 0 0;
+  align-items: center;
+  flex-direction: column;
+  position: sticky;
+  /*background-color: #222020;*/
+  /*width: 40em;*/
+  /*padding-bottom: 4em;*/
+  /*margin: -40vh 0 0 0;*/
 }
 
 .slide-in-enter-from {
@@ -160,4 +178,22 @@ p {
   color: #fcfcfc;
   padding: 2em 10em;
 }
+.scroll-icon {
+  font-size: 5em;
+  animation: 2.5s infinite ease hover-effect;
+  position: absolute;
+}
+@keyframes hover-effect {
+ 0%{
+   bottom: 0;
+ }
+ 50% {
+   bottom: 1em;
+ }
+ 100% {
+   bottom: 0
+ }
+}
+
+
 </style>

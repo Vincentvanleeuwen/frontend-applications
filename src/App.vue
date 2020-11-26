@@ -36,7 +36,7 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap');
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
