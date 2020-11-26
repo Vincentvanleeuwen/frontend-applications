@@ -1,15 +1,12 @@
 <template>
   <form id="form">
-
     <fieldset>
       <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
       <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
       <legend>Legenda</legend>
       <label for="parking">
-
       </label>
       <label for="charging">
-
       </label>
     </fieldset>
 
@@ -17,16 +14,15 @@
       <input id="towns" type="radio" name="type" value="Dorpen">
       <input id="cities" type="radio" name="type" value="Steden" checked>
       <label for="cities">
-
         Steden
       </label>
       <label for="towns">
-
         Dorpen
       </label>
     </fieldset>
   </form>
   <svg id="d3-chart"></svg>
+
 <!--  DOM needs to see an update in order for the graph to update-->
   <div style="display:none;">
     {{ currentColumn }}
@@ -38,7 +34,7 @@
 </template>
 
 <script>
-// import { ref, watch } from 'vue'
+
 import { getPlaces } from '@/helpers/getPlaces'
 import {
   select,

@@ -1,31 +1,33 @@
 <template>
-
-    <div class="title" data-aos="zoom-out-down">
-<!--      <h1>Hoe krap is het per stad in parkeergarages qua oplaadpunten voor elektrische auto's?</h1>-->
+    <div class="title"
+         data-aos="zoom-out-down">
       <h1>Kun je je elektrische auto gemakkelijk opladen in parkeergarages in Nederland?</h1>
     </div>
 
   <section class="story-container">
-    <p data-aos="fade-right" data-aos-delay="500">
+    <p data-aos="fade-right"
+       data-aos-delay="500">
       Amsterdam heeft als doel om in 2030 een elektrische stad te zijn. Dit houdt in dat er dus ook geen benzine
       voertuigen mogen rijden. Wat ik mij afvraag, kunnen de parkeergarages genoeg oplaadpunten aanbieden als er alleen
       maar elektrische voertuigen mogen rijden in de stad, en hoe gaan de omliggende dorpen en steden daarmee om?
     </p>
-    <p data-aos="fade-left" data-aos-offset="500">
+    <p data-aos="fade-left"
+       data-aos-offset="500">
       In de onderstaande grafiek heb ik aan de hand van RDW data onderzocht hoeveel laadpunten en parkeerplaatsen er zijn per
       stad of dorp in parkeergarages.
     </p>
   </section>
-<!--  <section class="story-container">-->
-<!--  -->
-<!--  </section>-->
+
 
   <div id="animation"></div>
   <div v-if="error">
     {{ error }}
     Cant fetch Data.
   </div>
-  <div id="lolly-container" v-else-if="dataState.length" data-aos="fade-up" data-aos-offset="500">
+  <div id="lolly-container"
+       v-else-if="dataState.length"
+       data-aos="fade-up"
+       data-aos-offset="500">
     <Graph :cleanedData="dataState" />
   </div>
   <section class="story-container">
