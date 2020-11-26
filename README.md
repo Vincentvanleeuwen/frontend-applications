@@ -13,7 +13,8 @@ For a more detailed overview, check [Research Questions](https://github.com/Vinc
 ## Which Features?
 
 I'm creating a lollipop chart in D3.js. The user can change the values of the graph and hover over the lollypops for more information.
-In this project I've also added animation on scroll. To create a more storytelling feel.
+
+In this project I've also added animation on scroll, to create a more storytelling feel.
 
 ## Which Data am I using?
 
@@ -34,6 +35,8 @@ Needed columns:
 In these two data sets I can compare the AreaID row, so I can find out where each charging point is located.
 The AreaDesc shows the name of the parking area and the city.
 
+There have been two invalid data pieces. There was no location bound to the object so I had to leave these two out of the results.
+The reason not every city and town are included in the graph is that there simply wasn't any data of those towns and cities.
 ## Main Packages used
 - [D3@6.2.0](https://www.npmjs.com/package/d3)
 - [Vue.js@3.0.0](https://www.npmjs.com/package/vue)
@@ -62,14 +65,15 @@ You can now preview the datastory at localhost:8080/
 
 ## Live Preview
 
-https://naughty-dubinsky-ad1b58.netlify.app/
-![Vue D3 Graph](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+https://frontendapp-vincent.netlify.app/
+![Vue D3 Graph](https://github.com/Vincentvanleeuwen/frontend-applications/blob/main/public/media/preview.png)
 
 ## Sources
 
-People that helped: 
-- Jonah Meijers (Reduce, Tuples, find)
-- Robert Spier (Windows/Git problems & Map)
+People that helped out with weird little bugs: 
+- **Jonah Meijers**
+- Roeland van Stee
+- Robert Spier 
 
 https://www.d3-graph-gallery.com/graph/lollipop_horizontal.html
 
