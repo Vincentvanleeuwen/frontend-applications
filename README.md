@@ -1,6 +1,5 @@
 # frontend-applications
 
-
 ## What does this project do?
 
 The newspaper "De Volkskrant" asked us to look at data from the RDW and create a concept that will be interesting enough for a data journalist to write an article about.
