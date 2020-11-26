@@ -1,37 +1,38 @@
 <template>
+  <form id="form">
+
+    <fieldset>
+      <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
+      <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
+      <legend>Legenda</legend>
+      <label for="parking">
+
+      </label>
+      <label for="charging">
+
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <input id="towns" type="radio" name="type" value="Dorpen">
+      <input id="cities" type="radio" name="type" value="Steden" checked>
+      <label for="cities">
+
+        Steden
+      </label>
+      <label for="towns">
+
+        Dorpen
+      </label>
+    </fieldset>
+  </form>
   <svg id="d3-chart"></svg>
 <!--  DOM needs to see an update in order for the graph to update-->
   <div style="display:none;">
     {{ currentColumn }}
     {{ currentType }}
   </div>
-  <aside>
-    <form id="form">
 
-      <fieldset>
-        <legend>Verander de X as</legend>
-        <label for="parking">
-          <input id="parking" type="radio" name="column" value="Aantal parkeerplaatsen" checked>
-        </label>
-        <label for="charging">
-          <input id="charging" type="radio" name="column" value="Aantal oplaadpunten">
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Verander de Y as</legend>
-
-        <label for="cities">
-          <input id="cities" type="radio" name="type" value="Steden" checked>
-          Steden
-        </label>
-        <label for="towns">
-          <input id="towns" type="radio" name="type" value="Dorpen">
-          Dorpen
-        </label>
-      </fieldset>
-    </form>
-  </aside>
 
 
 </template>
@@ -70,17 +71,6 @@ export default {
       currentType: 'city'
     }
   },
-  // setup() {
-  //   // return reactive({
-  //   //   currentColumn: 'capacity',
-  //   //   currentType: 'city',
-  //   // })
-  //
-  //   const currentColumn = ref('capacity')
-  //   const currentType = ref('city')
-  //
-  //   return { currentColumn, currentType }
-  // },
   mounted() {
     // Create the graph container
     select('#d3-chart').attr(`viewBox`, `0, 0, ${(width + margin.left + margin.right)}, ${(height + margin.top +
@@ -106,16 +96,10 @@ export default {
       e.currentTarget.value === 'Dorpen' ?
           this.currentType = 'town' :
           this.currentType = 'city'
-
     });
-
-
-
-
   },
   // Run this code after the component has updated.
   updated() {
-    console.log('hello')
     // Update axis data & lollipop data
     this.xAxis()
     this.yAxis()
@@ -368,14 +352,9 @@ export default {
 
   form {
     display:flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
-    /*position: fixed;*/
-    /*right:0;*/
-    /*top:0;*/
-    /*bottom:0;*/
-    /*z-index: 999;*/
+    align-items: flex-end;
     padding: 2em;
   }
   fieldset {
@@ -385,8 +364,8 @@ export default {
     align-items: flex-start;
     width: 100%;
     padding: 0;
-    margin: .5em 0;
-
+    margin: .5em .5em;
+    position: relative;
     border:none;
   }
   fieldset label {
@@ -403,6 +382,8 @@ export default {
     text-align: center;
     cursor: pointer;
     box-sizing: border-box;
+    background-color: #222020;
+    line-height: 39px!important;
   }
   input[type="radio"] {
     position: absolute;
@@ -410,21 +391,6 @@ export default {
     right:0;
     opacity: 0;
   }
-  label[for="charging"]{
-    background-color: #ffca68;
-  }
-  label[for="parking"] {
-    background-color: #5a61ff;
-  }
-  label[for="towns"]{
-    background-color: #80a835;
-    line-height: 39px;
-  }
-  label[for="cities"] {
-    background-color: #ff7162;
-    line-height: 39px;
-  }
-
   label[for="charging"]:before, label[for="parking"]:before {
     content: "";
     position: absolute;
@@ -447,17 +413,24 @@ export default {
     transition: .5s;
   }
   input[value="Aantal parkeerplaatsen"]:checked ~ label[for="parking"] {
-    border: 2px black solid;
+    border: none;
+
+    background-color: #5a61ff;
   }
   input[value="Aantal oplaadpunten"]:checked ~ label[for="charging"] {
-    border: 2px black solid;
+    border: none;
+    background-color: #ffca68;
   }
   input[value="Steden"]:checked ~ label[for="cities"] {
-    border: 2px black solid;
+    border: none;
+    background-color: #5a61ff;
   }
   input[value="Dorpen"]:checked ~ label[for="towns"] {
-    border: 2px black solid;
+    border: none;
+    background-color: #ffca68;
   }
-
+ legend {
+   margin-bottom: 2em;
+ }
 
 </style>
