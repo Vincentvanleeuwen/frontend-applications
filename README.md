@@ -12,16 +12,8 @@ For a more detailed overview, check [Research Questions](https://github.com/Vinc
 
 ## Which Features?
 
-I've implemented interactivity by giving the user the possibility to change the axis. On the Y-axis you can change from cities to towns. On the X-axis you can change from parking spots to charging points.
-There are also tooltips when you hover over each lollipop. Here you can see the exact amount of parking spots/charging points per city/town
-
-### Volkskrant
-
-- Fetch all data
-- Convert data to JSON
-- Map data, delete unnecesarry columns.
-- Merge two datasets based on AreaId using Reduce
-- Filter empty entries
+I'm creating a lollipop chart in D3.js. The user can change the values of the graph and hover over the lollypops for more information.
+In this project I've also added animation on scroll. To create a more storytelling feel.
 
 ## Which Data am I using?
 
@@ -42,11 +34,11 @@ Needed columns:
 In these two data sets I can compare the AreaID row, so I can find out where each charging point is located.
 The AreaDesc shows the name of the parking area and the city.
 
-## Packages used
-- D3@6.2.0
-- Vue.js@3.0.0
-- Vue Router@4.0.0
-- AOS@3.0.0
+## Main Packages used
+- [D3@6.2.0](https://www.npmjs.com/package/d3)
+- [Vue.js@3.0.0](https://www.npmjs.com/package/vue)
+- [Vue Router@4.0.0](https://unpkg.com/vue-router@next)
+- [AOS@3.0.0](https://www.npmjs.com/package/aos)
 
 ## Installation Guide
 
@@ -71,6 +63,7 @@ You can now preview the datastory at localhost:8080/
 ## Live Preview
 
 https://naughty-dubinsky-ad1b58.netlify.app/
+![Vue D3 Graph](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 
 ## Sources
 
