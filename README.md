@@ -70,7 +70,7 @@ You can now preview the datastory at localhost:8080/
 
 ## Live Preview
 
-//
+https://naughty-dubinsky-ad1b58.netlify.app/
 
 ## Sources
 
