@@ -70,9 +70,10 @@ https://frontendapp-vincent.netlify.app/
 
 ## Sources
 
-People that helped: 
-- Jonah Meijers (Reduce, Tuples, lifecycle hooks,  )
-- Robert Spier (Windows/Git problems & Map)
+People that helped out with weird little bugs: 
+- Jonah Meijers
+- Roeland van Stee
+- Robert Spier 
 
 https://www.d3-graph-gallery.com/graph/lollipop_horizontal.html
 
