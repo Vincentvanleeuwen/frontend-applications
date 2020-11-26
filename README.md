@@ -13,7 +13,8 @@ For a more detailed overview, check [Research Questions](https://github.com/Vinc
 ## Which Features?
 
 I'm creating a lollipop chart in D3.js. The user can change the values of the graph and hover over the lollypops for more information.
-In this project I've also added animation on scroll. To create a more storytelling feel.
+
+In this project I've also added animation on scroll, to create a more storytelling feel.
 
 ## Which Data am I using?
 
